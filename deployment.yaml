@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cliente-service
+  labels:
+    app: cliente-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cliente-service
+  template:
+    metadata:
+      labels:
+        app: cliente-service
+    spec:
+      containers:
+        - image: cerliofaccojr/cliente-service:v1.0.0
+          name: cliente-service
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 200m
+            limits:
+              memory: 1000Mi
+              cpu: 400m
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cliente-service
+spec:
+  selector:
+    app: cliente-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: LoadBalancer
